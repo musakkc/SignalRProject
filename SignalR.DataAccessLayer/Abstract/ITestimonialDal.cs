@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SignalR.DataAccessLayer.Abstract
 {
-    interface ITestimonialDal:IGenericDal<Testimonial>
+    public interface ITestimonialDal:IGenericDal<Testimonial>
     {
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SignalR.DataAccessLayer.Abstract
 {
-    interface IContactDal:IGenericDal<Contact>
+    public interface IContactDal:IGenericDal<Contact>
     {
     }
 }

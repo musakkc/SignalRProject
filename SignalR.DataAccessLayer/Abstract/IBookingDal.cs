@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SignalR.DataAccessLayer.Abstract
 {
-    interface IBookingDal:IGenericDal<Booking>
+    public interface IBookingDal:IGenericDal<Booking>
     {
     }
 }

@@ -59,7 +59,7 @@ namespace SignalRApi.Controllers
             });
             return Ok("Ürün Bilgisi Eklendi");
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
             var value = _productService.TGetById(id);

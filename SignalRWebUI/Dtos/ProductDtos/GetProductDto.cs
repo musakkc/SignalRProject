@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SignalR.DtoLayer.ProductDto
+﻿namespace SignalRWebUI.Dtos.ProductDtos
 {
-    public class UpdateProductDto
+    public class GetProductDto
     {
         public int ProductID { get; set; }
 
@@ -19,6 +13,8 @@ namespace SignalR.DtoLayer.ProductDto
         public string ImageUrl { get; set; }
 
         public bool ProductStatus { get; set; }
+
+        public string CategoryName { get; set; }
 
         public int CategoryID { get; set; }
     }

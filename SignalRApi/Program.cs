@@ -3,9 +3,22 @@ using SignalR.BusinessLayer.Concrete;
 using SignalR.DataAccessLayer.Abstract;
 using SignalR.DataAccessLayer.Concrete;
 using SignalR.DataAccessLayer.EntityFramework;
+using SignalRApi.Hubs;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyHeader() // builder arayüzü, tüm baþlýklarý kabul eder
+               .AllowAnyMethod() // builder arayüzü, tüm HTTP yöntemlerini (GET, POST, PUT, DELETE vb.) kabul eder
+              .SetIsOriginAllowed((host) => true) // builder arayüzü, tüm kaynaklardan gelen istekleri kabul eder
+              .AllowCredentials(); // builder arayüzü, kimlik doðrulama bilgilerini (örneðin, çerezler veya HTTP baþlýklarý) içeren istekleri kabul eder
+    });
+});
+builder.Services.AddSignalR(); 
 
 builder.Services.AddDbContext<SignalRContext>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -39,11 +52,15 @@ builder.Services.AddScoped<ITestimonialDal, EfTestimonialDal>();
 
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//builder.Services.AddControllersWithViews(); // ----
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+//app.UseRouting(); // ----
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -51,11 +68,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+//app.MapDefaultControllerRoute(); // ---- // MVC Routing'i tanýmlar
+
+app.MapHub<SignalRHub>("/signalrhub"); // SignalRHub sýnýfý, SignalR ile istemcilerle iletiþim kurmak için kullanýlacak.
+//localhost://5000/signalrhub istekte bulunabileceðim (örneðin)
 
 app.Run();

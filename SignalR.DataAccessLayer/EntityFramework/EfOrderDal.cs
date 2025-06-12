@@ -29,6 +29,12 @@ namespace SignalR.DataAccessLayer.EntityFramework
             // OrderByDescending ile en son eklenen siparişi alıyoruz ve Take(1) ile de bir değer alıyoruz.
         }
 
+        public decimal TodayTotalPrice()
+        {
+            using var context = new SignalRContext();
+            return context.Orders.Where(x => x.OrderDate == DateOnly.Parse(DateTime.Now.ToShortDateString())).Sum(y => y.TotalPrice);
+        }
+
         public int TotalOrderCount()
         {
             using var context = new SignalRContext();

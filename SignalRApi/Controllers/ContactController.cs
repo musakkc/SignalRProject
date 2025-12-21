@@ -29,14 +29,18 @@ namespace SignalRApi.Controllers
             return Ok(value);
         }
         [HttpPost]
-        public IActionResult CreateCategory(CreateContactDto createContactDto)
+        public IActionResult CreateContact(CreateContactDto createContactDto)
         {
             _contactService.TAdd(new Contact()
             {
                 FooterDescription = createContactDto.FooterDescription,
                 Locaiton = createContactDto.Locaiton,
                 Mail = createContactDto.Mail,
-                Phone = createContactDto.Phone
+                Phone = createContactDto.Phone,
+                FooterTitle = createContactDto.FooterTitle,
+                OpenDays = createContactDto.OpenDays,
+                OpenDaysDescription = createContactDto.OpenDaysDescription,
+                OpenHours = createContactDto.OpenHours
             });
             return Ok("İletişim Bilgisi Eklendi");
         }
@@ -62,7 +66,11 @@ namespace SignalRApi.Controllers
                 FooterDescription = updateContactDto.FooterDescription,
                 Locaiton = updateContactDto.Locaiton,
                 Mail = updateContactDto.Mail,
-                Phone = updateContactDto.Phone
+                Phone = updateContactDto.Phone,
+                FooterTitle = updateContactDto.FooterTitle,
+                OpenDays = updateContactDto.OpenDays,
+                OpenDaysDescription = updateContactDto.OpenDaysDescription,
+                OpenHours = updateContactDto.OpenHours
             });
             return Ok("İletişim Bilgisi Güncellendi");
         }

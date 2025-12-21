@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SignalRApi.Controllers
+namespace SignalRWebUI.Controllers
 {
     public class MessageController : Controller
     {
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult ClientUserCount()
         {
             return View();
         }

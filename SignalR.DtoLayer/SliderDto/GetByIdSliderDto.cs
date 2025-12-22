@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SignalR.DtoLayer.SliderDto
 {
-    public class GetSliderDto
+    public class GetByIdSliderDto
     {
         public int SliderID { get; set; }
         public string Title1 { get; set; }

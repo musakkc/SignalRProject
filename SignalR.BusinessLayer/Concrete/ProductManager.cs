@@ -82,5 +82,10 @@ namespace SignalR.BusinessLayer.Concrete
         {
             _productDal.Update(entity);
         }
+
+        public List<Product> TGetLast9Products()
+        {
+            return _productDal.GetLast9Products();
+        }
     }
 }

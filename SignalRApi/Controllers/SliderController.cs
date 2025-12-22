@@ -54,21 +54,13 @@ namespace SignalRApi.Controllers
         public IActionResult GetSlider(int id)
         {
             var value = _sliderService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetByIdSliderDto>(value));
         }
         [HttpPut]
         public IActionResult UpdateSlider(UpdateSliderDto updateSliderDto)
         {
-            _sliderService.TUpdate(new Slider()
-            {
-                SliderID = updateSliderDto.SliderID,
-                Title1 = updateSliderDto.Title1,
-                Description1 = updateSliderDto.Description1,
-                Title2 = updateSliderDto.Title2,
-                Description2 = updateSliderDto.Description2,
-                Title3 = updateSliderDto.Title3,
-                Description3 = updateSliderDto.Description3
-            });
+            var value = _mapper.Map<Slider>(updateSliderDto);
+            _sliderService.TUpdate(value);
             return Ok("Öne Çıkan Alan Bilgisi Güncellendi");
         }
     }

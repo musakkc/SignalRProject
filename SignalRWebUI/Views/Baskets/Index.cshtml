@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
 
-@await Component.InvokeAsync("_UILayoutHeadComponentPartial")
+@await Component.InvokeAsync("_UILayoutHeadComponentPartial") 
 
 <body class="sub_page">
 
@@ -30,6 +30,19 @@
         </div>
     </div>
 
+    @* Başarı mesajı göster *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="container-fluid">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong><i class="fa fa-check-circle"></i></strong> @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    }
+
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-lg-8 table-responsive mb-5">
@@ -46,21 +59,41 @@
                     </thead>
                     @foreach (var item in Model)
                     {
-                        basketTotalPrice = Model.Sum(x => x.Price);
+                        // İndirimli fiyatı kullan
+                        decimal displayPrice = item.DiscountedPrice ?? item.Price;
+                        basketTotalPrice = Model.Sum(x => x.DiscountedPrice ?? x.Price);
                         tax = basketTotalPrice * 10 / 100;
                         basketTotalPriceWithTax = basketTotalPrice + tax;
                         count++;
-                        totalPrice = item.Price * item.Count;
+                        totalPrice = displayPrice * item.Count;
                         <tbody class="align-middle">
                             <tr>
                                 <td class="align-middle">@count</td>
-                                <td class="align-middle">@item.ProductName</td>
+                                <td class="align-middle">
+                                    @item.ProductName
+                                    @if (item.DiscountedPrice != null)
+                                    {
+                                        <br /><span class="badge badge-success">🏷️ İndirimli!</span>
+                                    }
+                                </td>
                                 <td class="align-middle">@item.Count</td>
-                                <td class="align-middle">@item.Price</td>
+                                <td class="align-middle">
+                                    @if (item.DiscountedPrice != null)
+                                    {
+                                        <del class="text-muted">@item.Price ₺</del>
+                                        <br />
+                                        <strong class="text-success">@item.DiscountedPrice.Value.ToString("0.00") ₺</strong>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Price ₺</span>
+                                    }
+                                </td>
                                 <td class="align-middle">@totalPrice.ToString("0.00")</td>
-                                <td class="align-middle btn-delete"><a class="btn btn-sm btn-danger"
+                                <td class="align-middle btn-delete"><a class="btn btn-sm btn-danger" href="/Baskets/DeleteBasket/@item.BasketID"><i class="fa fa-times"></i></a></td>
+                                @* <td class="align-middle btn-delete"><a class="btn btn-sm btn-danger"
                                         href="@Url.Action("DeleteBasket", "Baskets", new { id = item.BasketID })"><i
-                                            class="fa fa-times"></i></a></td>
+                                            class="fa fa-times"></i></a></td> *@
                             </tr>
                         </tbody>
                     }
@@ -99,11 +132,75 @@
                         </div>
                     </div>
                     <br />
-                    <button id="btnchecked" class="btn btn-block btn-warning font-weight-bold my-3">Siparişi
-                        Tamamla</button>
+                    
+                    <a href="/Baskets/ConfirmOrder/@TempData["id"]" class="btn btn-block btn-success font-weight-bold my-3"
+                       onclick="return confirm('Siparişi mutfağa göndermek istediğinize emin misiniz?');">
+                        <i class="fa fa-check"></i> Siparişi Ver
+                    </a>
+                    
+                    
+                    
+                    @{ TempData.Keep("id"); }
                 </div>
             </div>
         </div>
+         
+        @if (ViewBag.Orders != null && ViewBag.Orders.Count > 0)
+        {
+            <div class="row px-xl-5 mt-5">
+                <div class="col-12">
+                    <h4 class="mb-4 text-dark">📋 Sipariş Geçmişi</h4>
+                </div>
+            </div>
+            <div class="row px-xl-5">
+                <div class="col-12">
+                    @foreach (var order in ViewBag.Orders)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-body bg-light">
+                                <div class="row">
+                                    
+                                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                        @if (order.Status == "Teslim Edildi")
+                                        {
+                                            <i class="fa fa-check-circle fa-3x text-success" title="Teslim Edildi"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-clock-o fa-3x text-warning" title="Hazırlanıyor"></i>
+                                        }
+                                    </div>
+                                    <div class="col-md-7">
+                                        <h5 class="card-title text-dark">@order.Description</h5>
+                                        <p class="card-text text-muted">
+                                            <small>
+                                                <i class="fa fa-calendar"></i> @order.OrderDate.ToString("dd.MM.yyyy HH:mm")
+                                            </small>
+                                        </p>
+                                        @* Durum Badge *@
+                                        @if (order.Status == "Beklemede")
+                                        {
+                                            <span class="badge badge-warning">🟡 Hazırlanıyor</span>
+                                        }
+                                        else if (order.Status == "Onaylandı")
+                                        {
+                                            <span class="badge badge-info">🔵 Onaylandı</span>
+                                        }
+                                        else if (order.Status == "Teslim Edildi")
+                                        {
+                                            <span class="badge badge-success">✅ Teslim Edildi</span>
+                                        }
+                                    </div>
+                                    <div class="col-md-4 text-right d-flex align-items-center justify-content-end">
+                                        <h4 class="text-success">@order.TotalPrice.ToString("C2")</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
 
     @await Component.InvokeAsync("_UILayoutFooterComponentPartial")

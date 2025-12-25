@@ -1,4 +1,8 @@
 ﻿@model List<ResultSliderDto>
+ 
+@{
+    var menuTableId = Context.Request.Cookies["MenuTableId"] ?? "";
+} 
 
 @foreach (var item in Model)
 {
@@ -18,8 +22,8 @@
                                     <p>
                                         @item.Description1
                                     </p>
-                                    <div class="btn-box">
-                                        <a href="/Menu/Index/" class="btn1">
+                                    <div class="btn-box"> 
+                                        <a href="/Menu/Index/@menuTableId" class="btn1"> 
                                             Sipariş Ver
                                         </a>
                                     </div>
@@ -40,7 +44,9 @@
                                        @item.Description2
                                     </p>
                                     <div class="btn-box">
-                                        <a href="/Menu/Index/" class="btn1">
+                                        @* YENİ: Cookie'den gelen menuTableId kullanılıyor *@
+                                        <a href="/Menu/Index/@menuTableId" class="btn1">
+                                        @* ESKİ: <a href="/Menu/Index/" class="btn1"> *@
                                             Sipariş Ver
                                         </a>
                                     </div>
@@ -61,7 +67,9 @@
                                         @item.Description3
                                     </p>
                                     <div class="btn-box">
-                                        <a href="/Menu/Index/" class="btn1">
+                                        @* YENİ: Cookie'den gelen menuTableId kullanılıyor *@
+                                        <a href="/Menu/Index/@menuTableId" class="btn1">
+                                        @* ESKİ: <a href="/Menu/Index/" class="btn1"> *@
                                             Sipariş Ver
                                         </a>
                                     </div>

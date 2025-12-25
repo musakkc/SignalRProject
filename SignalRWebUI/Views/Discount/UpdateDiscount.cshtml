@@ -39,6 +39,22 @@
 								<input type="text" class="form-control" asp-for="Description" id="Description">
 							</div>
 						</div>
+					<div class="card-body">
+						<div class="form-group">
+							<label for="CategoryID">Kategori Seçiniz (Opsiyonel)</label>
+							<select class="form-control" asp-for="CategoryID" id="CategoryID">
+								<option value="">-- Genel İndirim (Tüm Kategoriler) --</option>
+								@if (ViewBag.Categories != null)
+								{
+									@foreach (var category in ViewBag.Categories)
+									{
+										<option value="@category.CategoryID">@category.CategoryName</option>
+									}
+								}
+							</select>
+							<small class="form-text text-muted">Kategori seçerseniz sadece o kategorideki ürünlere indirim uygulanır.</small>
+						</div>
+					</div>
 						<div class="card-action">
 							<button class="btn btn-primary">İndirimli Ürünü Güncelle</button>
 						</div>

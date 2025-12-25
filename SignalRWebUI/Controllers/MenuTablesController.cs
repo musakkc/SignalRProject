@@ -97,5 +97,16 @@ namespace SignalRWebUI.Controllers
 
             return View();
         }
+         
+        public async Task<IActionResult> CompletePayment(int tableId)
+        {
+            var client = _httpClientFactory.CreateClient();
+             
+            await client.DeleteAsync($"https://localhost:7017/api/Order/DeleteByTableNumber/{tableId}");
+             
+            await client.GetAsync($"https://localhost:7017/api/MenuTables/ChangeMenuTableStatusToFalse?id={tableId}");
+            
+            return RedirectToAction("TableListByStatus");
+        }
     }
 }

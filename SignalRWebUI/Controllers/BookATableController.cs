@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SignalRWebUI.Dtos.BookingDtos;
@@ -7,6 +8,7 @@ using System.Text;
 
 namespace SignalRWebUI.Controllers
 {
+    [AllowAnonymous]
     public class BookATableController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -36,7 +38,7 @@ namespace SignalRWebUI.Controllers
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             JArray item = JArray.Parse(responseBody);
-            string value = item[0]["location"].ToString();
+            string value = item[0]["locaiton"].ToString();
             ViewBag.location = value;
 
             createBookingDto.Description = "b";

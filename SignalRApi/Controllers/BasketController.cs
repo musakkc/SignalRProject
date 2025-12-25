@@ -31,8 +31,7 @@ namespace SignalRApi.Controllers
         public IActionResult BasketListByMenuTableWithProductName(int id)
         {
             using var context = new SignalRContext();
-            var values = context.Baskets.Include(x => x.Product).Where(y =>
-            y.MenuTableID == id).Select(z => new ResultBasketListWithProduct
+            var values = context.Baskets.Include(x => x.Product).Where(y => y.MenuTableID == id).Select(z => new ResultBasketListWithProduct
             {
                 BasketID = z.BasketID,
                 Count = z.Count,
@@ -40,23 +39,46 @@ namespace SignalRApi.Controllers
                 Price = z.Price,
                 ProductID = z.ProductID,
                 TotalPrice = z.TotalPrice,
-                ProductName = z.Product.ProductName
+                ProductName = z.Product.ProductName,
+                DiscountedPrice = z.DiscountedPrice
             }).ToList();
             return Ok(values);
         }
         [HttpPost]
         public IActionResult CreateBasket(CreateBasketDto createBasketDto)
         {
-            //Bahçe 01 --> 45
             using var context = new SignalRContext();
+             
+            var product = context.Products.Find(createBasketDto.ProductID);
+            if (product == null)
+                return BadRequest("Ürün bulunamadı");
+            
+            decimal? discountedPrice = null;
+            
+            // Kategoriye göre aktif indirim var mı kontrol ediyoruz
+            var discount = context.Discounts
+                .Where(d => d.CategoryID == product.CategoryID && d.Status == true)
+                .OrderByDescending(d => d.Amount)
+                .FirstOrDefault();
+            
+            if (discount != null)
+            { 
+                if (decimal.TryParse(discount.Amount, out decimal discountRate))
+                { 
+                    discountedPrice = product.Price - (product.Price * discountRate / 100);
+                }
+            }
+             
             _basketService.TAdd(new Basket()
             {
                 ProductID = createBasketDto.ProductID,
                 MenuTableID = createBasketDto.MenuTableID,
                 Count = 1,
-                Price = context.Products.Where(x => x.ProductID == createBasketDto.ProductID).Select(y => y.Price).FirstOrDefault(),
-                TotalPrice = createBasketDto.TotalPrice,
+                Price = product.Price,   
+                DiscountedPrice = discountedPrice,  // indirimli fiyat (varsa)
+                TotalPrice = discountedPrice ?? product.Price,   
             });
+            
             return Ok();
         }
         [HttpDelete("{id}")]

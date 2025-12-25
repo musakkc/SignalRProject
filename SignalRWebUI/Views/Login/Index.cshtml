@@ -5,34 +5,73 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<title>SignalR Restoran Giriş Sayfası</title>
-	<!-- Mobile Specific Metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<!-- Font-->
-	<link rel="stylesheet" type="text/css" href="~/colorlib-regform-32/css/nunito-font.css">
-	<!-- Main Style Css -->
-	<link rel="stylesheet" href="~/colorlib-regform-32/css/style.css" />
-</head>
-<body class="form-v6">
-	<div class="page-content">
-		<div class="form-v6-content">
-			<div class="form-left">
-				<img src="~/colorlib-regform-32/images/Sauce1.jpg" alt="form" style="width:484px; height:584px">
-			</div>
-			<form class="form-detail" method="post">
-				<h2>Giriş Formu</h2>
-				<div class="form-row">
-					<input type="text" id="full-name" asp-for="Username" class="input-text" placeholder="Kullanıcı Adınız" required>
-				</div>
-				<div class="form-row">
-					<input type="password" id="password" class="input-text" placeholder="Şifreniz" asp-for="Password" required>
-				</div>
 
-				<button class="btn btn-dark">Giriş Yap</button>
-			</form>
-		</div>
-	</div>
+@await Component.InvokeAsync("_UILayoutHeadComponentPartial")
+
+<body class="sub_page">
+
+    @await Component.InvokeAsync("_MenuNavbarComponentPartial")
+
+    <section class="book_section layout_padding" style="min-height: 80vh;">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Giriş Yap
+                </h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #ffbe33 0%, #ff9900 100%);">
+                            <h3 class="text-white mb-0">
+                                <i class="fa fa-user-circle fa-2x mb-2"></i><br>
+                                MK Restoran
+                            </h3>
+                        </div>
+                        <div class="card-body p-5">
+                            <form method="post">
+                                <div class="form-group mb-4">
+                                    <label for="Username" class="form-label fw-bold">
+                                        <i class="fa fa-user"></i> Kullanıcı Adı
+                                    </label>
+                                    <input type="text" asp-for="Username" class="form-control form-control-lg" 
+                                           placeholder="Kullanıcı adınızı giriniz" required 
+                                           style="border-radius: 10px; border: 2px solid #ddd;">
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="Password" class="form-label fw-bold">
+                                        <i class="fa fa-lock"></i> Şifre
+                                    </label>
+                                    <input type="password" asp-for="Password" class="form-control form-control-lg" 
+                                           placeholder="Şifrenizi giriniz" required
+                                           style="border-radius: 10px; border: 2px solid #ddd;">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-lg text-white" 
+                                            style="background: linear-gradient(135deg, #ffbe33 0%, #ff9900 100%); border-radius: 10px; font-weight: bold;">
+                                        <i class="fa fa-sign-in-alt"></i> Giriş Yap
+                                    </button>
+                                </div>
+                            </form>
+                            <hr class="my-4">
+                            <div class="text-center">
+                                <a href="/Default/Index" class="text-muted">
+                                    <i class="fa fa-arrow-left"></i> Ana Sayfaya Dön
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @await Component.InvokeAsync("_UILayoutFooterComponentPartial")
+
+    @await Component.InvokeAsync("_UILayoutScriptComponentPartial")
+
 </body>
+
 </html>

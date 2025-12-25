@@ -1,0 +1,181 @@
+@using SignalRWebUI.Dtos.OrderDtos
+@model List<ResultOrderDto>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/AdminLayout/Index.cshtml";
+	int count = 0;
+}  
+<div class="content">
+	<div class="container-fluid">
+		<h4 class="page-title">Sipariş Yönetimi</h4>
+		
+		@* Success/Error Mesajları *@
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong><i class="fa fa-check-circle"></i></strong> @TempData["SuccessMessage"]
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		}
+		@if (TempData["ErrorMessage"] != null)
+		{
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong><i class="fa fa-times-circle"></i></strong> @TempData["ErrorMessage"]
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		}
+		
+		<div class="row">
+			<div class="col-md-12">
+
+				<div class="card">
+					<div class="card-header">
+						<div class="card-title">Sipariş Listesi</div>
+					</div>
+					<div class="card-body">
+						<div class="card-sub">
+							Müşterilerden gelen siparişleri buradan yönetebilirsiniz.
+						</div>
+						<table class="table mt-3">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Masa No</th>
+									<th scope="col">Açıklama</th>
+									<th scope="col">Tarih</th>
+									<th scope="col">Toplam</th>
+									<th scope="col">Durum</th>
+									<th scope="col">Onayla</th>
+									<th scope="col">Teslim Et</th>
+									<th scope="col">Detaylar</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									count++;
+									<tr>
+										<th>@count</th>
+										<td>Masa @item.TableNumber</td>
+										<td>@(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)</td>
+										<td>@item.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+										<td>@item.TotalPrice.ToString("C2")</td>
+										<td>
+											@if (item.Status == "Beklemede")
+											{
+												<span class="badge badge-warning">🟡 Beklemede</span>
+											}
+											else if (item.Status == "Onaylandı")
+											{
+												<span class="badge badge-success">🟢 Onaylandı</span>
+											}
+											else if (item.Status == "Teslim Edildi")
+											{
+												<span class="badge badge-info">🔵 Teslim Edildi</span>
+											}
+										</td>
+										<td>
+											@if (item.Status == "Beklemede")
+											{
+												<a href="/Orders/ApproveOrder/@item.OrderID" class="btn btn-outline-success">Onayla</a>
+											}
+											else
+											{
+												<span class="text-muted">-</span>
+											}
+										</td>
+										<td>
+											@if (item.Status == "Onaylandı")
+											{
+												<a href="/Orders/DeliverOrder/@item.OrderID" class="btn btn-outline-info">Teslim Et</a>
+											}
+											else
+											{
+												<span class="text-muted">-</span>
+											}
+										</td>
+										<td>
+											<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#orderModal@(item.OrderID)">
+												Detaylar
+											</button>
+										</td>
+									</tr>
+
+									<!-- Modal for Order Details -->
+									<div class="modal fade" id="orderModal@(item.OrderID)" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel@(item.OrderID)" aria-hidden="true">
+										<div class="modal-dialog modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="orderModalLabel@(item.OrderID)">Sipariş Detayları</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<div class="row mb-3">
+														<div class="col-md-6">
+															<strong>Masa Numarası:</strong>
+															<p>Masa @item.TableNumber</p>
+														</div>
+														<div class="col-md-6">
+															<strong>Sipariş Tarihi:</strong>
+															<p>@item.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+														</div>
+													</div>
+													<div class="row mb-3">
+														<div class="col-md-6">
+															<strong>Toplam Fiyat:</strong>
+															<p class="text-success h4">@item.TotalPrice.ToString("C2")</p>
+														</div>
+														<div class="col-md-6">
+															<strong>Durum:</strong>
+															<p>
+																@if (item.Status == "Beklemede")
+																{
+																	<span class="badge badge-warning">🟡 Beklemede</span>
+																}
+																else if (item.Status == "Onaylandı")
+																{
+																	<span class="badge badge-success">🟢 Onaylandı</span>
+																}
+																else if (item.Status == "Teslim Edildi")
+																{
+																	<span class="badge badge-info">🔵 Teslim Edildi</span>
+																}
+															</p>
+														</div>
+													</div>
+													<div class="row mb-3">
+														<div class="col-md-12">
+															<strong>Sipariş İçeriği:</strong>
+															<p class="bg-light p-3 rounded">@item.Description</p>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													@if (item.Status == "Beklemede")
+													{
+														<a href="/Orders/ApproveOrder/@item.OrderID" class="btn btn-success">Onayla</a>
+													}
+													@if (item.Status == "Onaylandı")
+													{
+														<a href="/Orders/DeliverOrder/@item.OrderID" class="btn btn-info">Teslim Et</a>
+													}
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

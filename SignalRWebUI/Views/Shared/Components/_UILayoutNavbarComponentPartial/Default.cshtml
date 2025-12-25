@@ -1,8 +1,7 @@
 ﻿<div class="hero_area">
     <div class="bg-box">
         <img src="~/feane-1.0.0/images/hero-bg.jpg" alt="">
-    </div>
-    <!-- header section strats -->
+    </div> 
     <header class="header_section">
         <div class="container">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
@@ -32,10 +31,11 @@
                         </li>
                     </ul>
                     <div class="user_option">
-                        <a href="" class="user_link">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                        </a>
-                        <a class="cart_link" href="#">
+                        @{
+                            var menuTableId = ViewBag.MenuTableId;
+                            var basketUrl = menuTableId != null ? $"/Baskets/Index/{menuTableId}" : "/Menu/Index/";
+                        }
+                        <a class="cart_link" href="@basketUrl">
                             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                             <g>
                             <g>
@@ -89,11 +89,6 @@
                   </g>
                 </svg>
                         </a>
-                        <form class="form-inline">
-                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                        </form>
                         <a href="/Menu/Index/" class="order_online">
                             Sipariş Ver
                         </a>
@@ -101,6 +96,5 @@
                 </div>
             </nav>
         </div>
-    </header>
-    <!-- end header section -->
+    </header> 
 

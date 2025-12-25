@@ -38,5 +38,16 @@ namespace SignalR.DataAccessLayer.EntityFramework
             var value = context.Discounts.Where(x=> x.Status == true).ToList();
             return value;
         }
+
+        public Discount GetActiveDiscountByCategoryId(int categoryId)
+        {
+            using var context = new SignalRContext();
+            // Kategoriye göre aktif indirimi getir (en yüksek indirim oranına sahip olanı)
+            var discount = context.Discounts
+                .Where(d => d.CategoryID == categoryId && d.Status == true)
+                .OrderByDescending(d => d.Amount)
+                .FirstOrDefault();
+            return discount;
+        }
     }
 }

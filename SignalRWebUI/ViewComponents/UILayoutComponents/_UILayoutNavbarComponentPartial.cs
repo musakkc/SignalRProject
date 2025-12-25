@@ -6,6 +6,12 @@ namespace SignalRWebUI.ViewComponents.UILayoutComponents
     {
         public IViewComponentResult Invoke()
         {
+            // Cookie'den MenuTableId'yi oku (HttpContext üzerinden)
+            var menuTableId = HttpContext.Request.Cookies["MenuTableId"];
+            if (!string.IsNullOrEmpty(menuTableId))
+            {
+                ViewBag.MenuTableId = menuTableId;
+            }
             return View();
         }
     }

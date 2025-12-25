@@ -14,5 +14,7 @@ namespace SignalRWebUI.Dtos.DiscountDtos
         public string ImageUrl { get; set; }
 
         public bool Status { get; set; }
+        
+        public int? CategoryID { get; set; }
     }
 }

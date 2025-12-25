@@ -12,5 +12,6 @@ namespace SignalRApi.Models
         public int ProductID { get; set; }
         public int MenuTableID { get; set; }
         public string ProductName { get; set; }
+        public decimal? DiscountedPrice { get; set; }
     }
 }

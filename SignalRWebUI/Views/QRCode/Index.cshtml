@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QR Kod Oluştur";
     Layout = "~/Views/AdminLayout/Index.cshtml";
 }
 
@@ -8,16 +8,50 @@
     <div class="container-fluid">
         <h4 class="page-title">QR Kod İşlemleri</h4>
         <div class="row">
-            <div class="col-md-12">
-                <form method="post" asp-action="Index" asp-controller="QRCode">
-                    <input type="text" name="value" />
-                    <input type="submit" value="QR Kod Oluştur" class="btn btn-warning" />
-                    <br /><br />
-                    @if (ViewBag.QrCodeImage != null)
-                    {
-                        <img src="@ViewBag.QrCodeImage" alt="" style="width:400px;height:400px" />
-                    }
-                </form>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Masa Seçin ve QR Kod Oluşturun</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" asp-action="Index" asp-controller="QRCode">
+                            <div class="form-group">
+                                <label for="menuTableId">Masa Seçin:</label>
+                                <select name="menuTableId" id="menuTableId" class="form-control">
+                                    <option value="">-- Masa Seçin --</option>
+                                    @if (ViewBag.Tables != null)
+                                    {
+                                        foreach (var table in ViewBag.Tables)
+                                        {
+                                            <option value="@table.MenuTableID">@table.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <br />
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fa fa-qrcode"></i> QR Kod Oluştur
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                @if (ViewBag.QrCodeImage != null)
+                {
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5>Oluşturulan QR Kod</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="@ViewBag.QrCodeImage" alt="QR Kod" style="width:300px;height:300px" />
+                            <hr />
+                            <p><strong>Masa ID:</strong> @ViewBag.SelectedTableId</p>
+                            <p><strong>Link:</strong> <a href="@ViewBag.GeneratedUrl" target="_blank">@ViewBag.GeneratedUrl</a></p>
+                            <p class="text-muted">Bu QR kodu yazdırıp masanın üzerine koyabilirsiniz.</p>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>

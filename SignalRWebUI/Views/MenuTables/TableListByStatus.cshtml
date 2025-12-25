@@ -12,7 +12,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
 
-<div> class="content">
+<div class="content">
     <div class="container-fluid">
 
         <script type="text/javascript">
@@ -36,11 +36,11 @@
                     let tablehtml = `<div class="row">`;
                     $.each(value, (index, item) => {
                         if (item.status == true) {
-                            color="card card-stats card-success";
+                            color="card card-stats card-danger";
                             status = "Masa Dolu";
                         }
                         else {
-                            color="card card-stats card-danger";
+                            color="card card-stats card-success";
                             status = "Masa Boş";
                         }
                         tablehtml += `<div class="col-md-3">
@@ -49,13 +49,16 @@
                                                     <div class="row">
                                                         <div class="col-5">
                                                             <div class="icon-big text-center">
-                                                                <i class="la la-certificate"></i>
+                                                                <i class="la la-cutlery text-white"></i>
                                                             </div>
                                                         </div>
                                                         <div class="col-7 d-flex align-items-center">
                                                             <div class="numbers">
                                                                 <p class="card-category">${item.name}</p>
                                                                 <h4 class="card-title">${status}</h4>
+                                                                <button class="btn btn-sm btn-primary mt-2" onclick="showTableDetails(${item.menuTableID}, '${item.name}')">
+                                                                    Detaylar
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -68,6 +71,61 @@
                 });
             });
 
+            // Masa detayları 
+            function showTableDetails(tableId, tableName) {
+                 
+                $.ajax({
+                    url: `https://localhost:7017/api/Order/GetByTableNumber/${tableId}`,
+                    success: function(orders) {
+                        let ordersHtml = '';
+                        if (orders && orders.length > 0) {
+                            ordersHtml = '<div class="list-group">';
+                            orders.forEach(order => {
+                                let badge = '';
+                                if (order.status == 'Beklemede') {
+                                    badge = '<span class="badge badge-warning">🟡 Beklemede</span>';
+                                } else if (order.status == 'Onaylandı') {
+                                    badge = '<span class="badge badge-success">🟢 Onaylandı</span>';
+                                } else if (order.status == 'Teslim Edildi') {
+                                    badge = '<span class="badge badge-info">🔵 Teslim Edildi</span>';
+                                }
+                                
+                                ordersHtml += `
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between">
+                                            <h6>${order.description}</h6>
+                                            ${badge}
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <small>${new Date(order.orderDate).toLocaleString('tr-TR')}</small>
+                                        </p>
+                                        <p class="mb-1"><strong>${order.totalPrice.toFixed(2)} ₺</strong></p>
+                                        <div class="btn-group btn-group-sm mt-2">
+                                            ${order.status == 'Beklemede' ? 
+                                                `<a href="/Orders/ApproveOrder/${order.orderID}" class="btn btn-success">Onayla</a>` : 
+                                                ''}
+                                            ${order.status == 'Onaylandı' ? 
+                                                `<a href="/Orders/DeliverOrder/${order.orderID}" class="btn btn-info">Teslim Et</a>` : 
+                                                ''}
+                                        </div>
+                                    </div>`;
+                            });
+                            ordersHtml += '</div>';
+                        } else {
+                            ordersHtml = '<p class="text-muted">Bu masada henüz sipariş yok.</p>';
+                        }
+                        
+                        $('#modalTableName').text(tableName);
+                        $('#modalOrdersList').html(ordersHtml);
+                        $('#modalTableId').val(tableId);
+                        $('#tableDetailsModal').modal('show');
+                    },
+                    error: function() {
+                        alert('Siparişler yüklenirken hata oluştu.');
+                    }
+                });
+            }
+
         </script>
 
         <h4 class="page-title">Anlık Masa Durumları Sayfası</h4>
@@ -76,3 +134,38 @@
             
     </div>
 </div>
+
+<!-- Masa Detay Modal -->
+<div class="modal fade" id="tableDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="modalTableName"></span> - Siparişler
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modalOrdersList"></div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="modalTableId" />
+                <button type="button" class="btn btn-danger" onclick="completePayment()">
+                    <i class="fa fa-credit-card"></i> Ödeme Yapıldı
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function completePayment() {
+        var tableId = $('#modalTableId').val();
+        if (confirm('Ödeme alındı ve masa boşaltılacak. Emin misiniz?')) {
+            window.location.href = `/MenuTables/CompletePayment?tableId=${tableId}`;
+        }
+    }
+</script>

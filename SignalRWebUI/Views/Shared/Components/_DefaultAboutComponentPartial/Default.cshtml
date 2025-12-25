@@ -1,4 +1,8 @@
 ﻿@model List<ResultAboutDto>
+ 
+@{
+    var menuTableId = Context.Request.Cookies["MenuTableId"] ?? "";
+} 
 @foreach (var item in Model)
 {
 
@@ -22,7 +26,7 @@
                         <p>
                             @item.Description
                         </p>
-                        <a href="/Menu/Index/">
+                        <a href="/Menu/Index/@menuTableId">
                             Hemen Sipariş Verin
                         </a>
                     </div>

@@ -74,5 +74,15 @@ namespace SignalRApi.Controllers
         {
             return Ok(_discountService.TGetListByStatusTrue());
         }
+
+        [HttpGet("GetActiveDiscountByCategoryId/{categoryId}")]
+        public IActionResult GetActiveDiscountByCategoryId(int categoryId)
+        {
+            var discount = _discountService.TGetActiveDiscountByCategoryId(categoryId);
+            if (discount == null)
+                return Ok(null);
+            
+            return Ok(_mapper.Map<ResultDiscountDto>(discount));
+        }
     }
 }

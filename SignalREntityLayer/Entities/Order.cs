@@ -13,9 +13,9 @@ namespace SignalR.EntityLayer.Entities
         public string TableNumber { get; set; }
         public string Description { get; set; }
         
-        [Column(TypeName ="Date")]
-        public DateOnly OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
         public decimal TotalPrice { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
+        public string Status { get; set; }
     }
 }

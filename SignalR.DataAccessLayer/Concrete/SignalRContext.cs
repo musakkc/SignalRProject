@@ -34,5 +34,14 @@ namespace SignalR.DataAccessLayer.Concrete
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages{ get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Orders tablosunda trigger var, EF Core'a bildir (OUTPUT clause kullanmaz)
+            modelBuilder.Entity<Order>()
+                .ToTable(t => t.HasTrigger("TR_Orders"));
+        }
     }
 }

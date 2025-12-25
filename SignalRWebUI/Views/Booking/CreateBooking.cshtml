@@ -1,4 +1,4 @@
-﻿@model ResultBookingDto
+﻿@model CreateBookingDto
 @{
 	ViewData["Title"] = "CreateBooking";
 	Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -16,6 +16,7 @@
 						<div class="card-body">
 							<div class="form-group">
 								<label for="Name">Ad Soyad</label>
+								<span asp-validation-for="Name" class="text-danger"></span>
 								<input type="text" class="form-control" asp-for="Name" id="Name">
 							</div>
 						</div>
@@ -24,6 +25,7 @@
 							<div class="form-group">
 								<label for="Phone">Telefon</label>
 								<input type="text" class="form-control" asp-for="Phone" id="Phone">
+								<span asp-validation-for="Phone" class="text-danger"></span>
 							</div>
 						</div>
 						
@@ -31,6 +33,7 @@
 							<div class="form-group">
 								<label for="Mail">Mail Adresi</label>
 								<input type="email" class="form-control" asp-for="Mail" id="Mail">
+								<span asp-validation-for="Mail" class="text-danger"></span>
 							</div>
 						</div>
 						
@@ -38,6 +41,7 @@
 							<div class="form-group">
 								<label for="PersonCount">Kişi Sayısı</label>
 								<input type="number" class="form-control" asp-for="PersonCount" id="PersonCount">
+								<span asp-validation-for="PersonCount" class="text-danger"></span>
 							</div>
 						</div>
 						
@@ -45,6 +49,7 @@
 							<div class="form-group">
 								<label for="Date">Rezervasyon Tarihi</label>
 								<input type="date" class="form-control" asp-for="Date" id="Date">
+								<span asp-validation-for="Date" class="text-danger"></span>
 							</div>
 						</div>
 						<div class="card-action">

@@ -26,24 +26,19 @@ namespace SignalRWebUI.Controllers
             string value = item[0]["locaiton"].ToString();
             ViewBag.location = value;
             return View();
+
+
         }
-        [HttpGet]
-        public PartialViewResult SendMessage()
-        {
-            return PartialView();
-        }
+         
         [HttpPost]
         public async Task<IActionResult> SendMessage(CreateMessageDto createMessageDto)
         {
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createMessageDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7017/api/Message", stringContent);
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index","Default");
-            }
-            return View();
-        }
+            await client.PostAsync("https://localhost:7017/api/Message", stringContent);
+            // Her durumda Index'e dön (başarılı olsun olmasın)
+            return RedirectToAction("Index", "Default");
+        } 
     }
 }

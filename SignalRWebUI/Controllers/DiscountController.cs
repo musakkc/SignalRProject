@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.DiscountDtos;
+using SignalRWebUI.Dtos.CategoryDtos;
 using System.Text;
 
 namespace SignalRWebUI.Controllers
@@ -28,8 +29,17 @@ namespace SignalRWebUI.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult CreateDiscount()
+        public async Task<IActionResult> CreateDiscount()
         {
+            // Kategori listesini çek
+            var client = _httpClientFactory.CreateClient();
+            var categoryResponse = await client.GetAsync("https://localhost:7017/api/Category");
+            if (categoryResponse.IsSuccessStatusCode)
+            {
+                var categoryJson = await categoryResponse.Content.ReadAsStringAsync();
+                var categories = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(categoryJson);
+                ViewBag.Categories = categories;
+            }
             return View();
         }
         [HttpPost]
@@ -60,6 +70,16 @@ namespace SignalRWebUI.Controllers
         public async Task<IActionResult> UpdateDiscount(int id)
         {
             var client = _httpClientFactory.CreateClient();
+            
+            // Kategori listesini çek
+            var categoryResponse = await client.GetAsync("https://localhost:7017/api/Category");
+            if (categoryResponse.IsSuccessStatusCode)
+            {
+                var categoryJson = await categoryResponse.Content.ReadAsStringAsync();
+                var categories = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(categoryJson);
+                ViewBag.Categories = categories;
+            }
+            
             var responseMessage = await client.GetAsync($"https://localhost:7017/api/Discount/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {

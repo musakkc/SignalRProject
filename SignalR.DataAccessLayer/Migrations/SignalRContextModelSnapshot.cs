@@ -217,6 +217,9 @@ namespace SignalR.DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CategoryID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -233,6 +236,8 @@ namespace SignalR.DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DiscountID");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Discounts");
                 });
@@ -427,6 +432,9 @@ namespace SignalR.DataAccessLayer.Migrations
                     b.Property<decimal>("Count")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("DiscountedPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("MenuTableID")
                         .HasColumnType("int");
 
@@ -611,8 +619,12 @@ namespace SignalR.DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("OrderDate")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TableNumber")
                         .IsRequired()
@@ -623,7 +635,12 @@ namespace SignalR.DataAccessLayer.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", t =>
+                        {
+                            t.HasTrigger("TR_Orders");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("SignalR.EntityLayer.Entities.OrderDetail", b =>
@@ -801,6 +818,15 @@ namespace SignalR.DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SignalR.EntityLayer.DAL.Entities.Discount", b =>
+                {
+                    b.HasOne("SignalR.EntityLayer.DAL.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("SignalR.EntityLayer.DAL.Entities.Product", b =>

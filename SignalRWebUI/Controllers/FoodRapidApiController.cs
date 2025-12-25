@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.RapidApiDtos;
 
 namespace SignalRWebUI.Controllers
 {
+    [AllowAnonymous]
     public class FoodRapidApiController : Controller
     {
         public async Task<IActionResult> Index()
@@ -23,8 +25,6 @@ namespace SignalRWebUI.Controllers
             {
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
-                //var values = JsonConvert.DeserializeObject<List<ResultTastyApi>>(body);
-                //return View(values.ToList());
                 var root = JsonConvert.DeserializeObject<RootTastyApi>(body);
                 var values = root.Results;
                 return View(values.ToList());

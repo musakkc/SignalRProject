@@ -19,9 +19,24 @@ namespace SignalRWebUI.Controllers
         }
 
         public async Task<IActionResult> Index(int id)
-        {
-            ViewBag.v = id; // Burada MenuTableId değerini ayarlıyoruz
-                            // TempData["x"] = id; // Eğer bunu kullanıyorsanız
+        { 
+            if (id == 0)
+            {
+                var cookieValue = Request.Cookies["MenuTableId"];
+                if (!string.IsNullOrEmpty(cookieValue) && int.TryParse(cookieValue, out int parsedId))
+                {
+                    id = parsedId;
+                }
+            }
+            
+            ViewBag.v = id;  
+
+            if (id > 0)
+            {
+                CookieOptions cookieOptions = new CookieOptions();
+                cookieOptions.Expires = DateTime.Now.AddDays(1);
+                Response.Cookies.Append("MenuTableId", id.ToString(), cookieOptions);
+            } 
 
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7017/api/Product/ProductListWithCategory");
@@ -50,8 +65,6 @@ namespace SignalRWebUI.Controllers
             var responseMessage = await client.PostAsync("https://localhost:7017/api/Basket", stringContent);
 
             var client2 = _httpClientFactory.CreateClient();
-            //var jsonData2 = JsonConvert.SerializeObject(updateCategoryDto);
-            //StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
             await client2.GetAsync("https://localhost:7017/api/MenuTables/ChangeMenuTableStatusToTrue?id=" + menuTableId);
 
             if (responseMessage.IsSuccessStatusCode)

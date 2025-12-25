@@ -55,5 +55,23 @@ namespace SignalRApi.Controllers
             var value = _messageService.TGetById(id);
             return Ok(_mapper.Map<GetByIdMessageDto>(value));
         }
+         
+        [HttpGet("ChangeStatusToTrue/{id}")]
+        public IActionResult ChangeStatusToTrue(int id)
+        {
+            var message = _messageService.TGetById(id);
+            message.Status = true;
+            _messageService.TUpdate(message);
+            return Ok("Mesaj cevaplandı olarak işaretlendi");
+        }
+         
+        [HttpGet("ChangeStatusToFalse/{id}")]
+        public IActionResult ChangeStatusToFalse(int id)
+        {
+            var message = _messageService.TGetById(id);
+            message.Status = false;
+            _messageService.TUpdate(message);
+            return Ok("Mesaj cevaplanmadı olarak işaretlendi");
+        } 
     }
 }

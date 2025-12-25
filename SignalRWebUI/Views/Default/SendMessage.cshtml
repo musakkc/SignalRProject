@@ -10,20 +10,24 @@
             <div class="col-md-6">
                 <div class="form_container">
                     <form method="post" asp-action="SendMessage" asp-controller="Default">
-                        <div>
-                            <input type="text" class="form-control" placeholder="Adınız Soyadınız" asp-for="NameSurname" />
+                        <div> 
+                            <input type="text" class="form-control" placeholder="Adınız Soyadınız" asp-for="NameSurname" required />
                         </div>
                         <div>
-                            <input type="text" class="form-control" placeholder="Telefon Numaranız" asp-for="Phone" />
+                            
+                            <input type="tel" class="form-control" placeholder="Telefon Numaranız (10 hane)" 
+                                   asp-for="Phone" required pattern="[0-9]{10}" maxlength="10"
+                                   title="10 haneli telefon numarası giriniz (sadece rakam)" />
                         </div>
-                        <div>
-                            <input type="email" class="form-control" placeholder="Email Adresiniz" asp-for="Mail" />
+                        <div> 
+                            <input type="email" class="form-control" placeholder="Email Adresiniz" asp-for="Mail" required />
                         </div>
-                        <div>
-                            <input type="text" class="form-control" placeholder="Konu" asp-for="Subject" />
+                        <div> 
+                            <input type="text" class="form-control" placeholder="Konu" asp-for="Subject" required />
                         </div>
-                        <div>
-                            <textarea asp-for="MessageContent" rows="10" placeholder="Buraya mesajınızı yazabilirsiniz..." class="form-control"></textarea>
+                        <div> 
+                            <textarea asp-for="MessageContent" rows="10" placeholder="Buraya mesajınızı yazabilirsiniz..." 
+                                      class="form-control" required></textarea>
                         </div>
                         <div class="btn_box">
                             <button>

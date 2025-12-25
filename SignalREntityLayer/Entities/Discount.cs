@@ -1,4 +1,6 @@
-﻿namespace SignalR.EntityLayer.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SignalR.EntityLayer.DAL.Entities
 
 {
     public class Discount
@@ -14,5 +16,10 @@
         public string ImageUrl { get; set; }
 
         public bool Status { get; set; }
+
+        public int? CategoryID { get; set; }
+
+        [ForeignKey("CategoryID")]
+        public virtual Category Category { get; set; }
     }
 }

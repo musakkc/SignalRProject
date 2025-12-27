@@ -1,9 +1,5 @@
-using SignalR.BusinessLayer.Abstract;
-using SignalR.BusinessLayer.Concrete;
 using SignalR.BusinessLayer.ValidationRules.BookingValidations;
-using SignalR.DataAccessLayer.Abstract;
 using SignalR.DataAccessLayer.Concrete;
-using SignalR.DataAccessLayer.EntityFramework;
 using SignalRApi.Hubs;
 using System.Reflection;
 using System.Text.Json.Serialization;

@@ -78,9 +78,13 @@
                     url: `https://localhost:7017/api/Order/GetByTableNumber/${tableId}`,
                     success: function(orders) {
                         let ordersHtml = '';
+                        let totalAmount = 0;
+                        
                         if (orders && orders.length > 0) {
                             ordersHtml = '<div class="list-group">';
                             orders.forEach(order => {
+                                totalAmount += order.totalPrice;
+                                
                                 let badge = '';
                                 if (order.status == 'Beklemede') {
                                     badge = '<span class="badge badge-warning">🟡 Beklemede</span>';
@@ -102,7 +106,8 @@
                                         <p class="mb-1"><strong>${order.totalPrice.toFixed(2)} ₺</strong></p>
                                         <div class="btn-group btn-group-sm mt-2">
                                             ${order.status == 'Beklemede' ? 
-                                                `<a href="/Orders/ApproveOrder/${order.orderID}" class="btn btn-success">Onayla</a>` : 
+                                                `<a href="/Orders/ApproveOrder/${order.orderID}" class="btn btn-success">Onayla</a>
+                                                 <a href="/Orders/DeleteOrder/${order.orderID}" class="btn btn-danger" onclick="return confirm('Bu siparişi iptal etmek istediğinizden emin misiniz?')">İptal Et</a>` : 
                                                 ''}
                                             ${order.status == 'Onaylandı' ? 
                                                 `<a href="/Orders/DeliverOrder/${order.orderID}" class="btn btn-info">Teslim Et</a>` : 
@@ -111,6 +116,7 @@
                                     </div>`;
                             });
                             ordersHtml += '</div>';
+                            ordersHtml += `<div class="alert alert-info mt-3"><strong>Toplam Borç: ${totalAmount.toFixed(2)} ₺</strong></div>`;
                         } else {
                             ordersHtml = '<p class="text-muted">Bu masada henüz sipariş yok.</p>';
                         }
@@ -143,7 +149,7 @@
                 <h5 class="modal-title">
                     <span id="modalTableName"></span> - Siparişler
                 </h5>
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span>&times;</span>
                 </button>
             </div>
@@ -155,7 +161,7 @@
                 <button type="button" class="btn btn-danger" onclick="completePayment()">
                     <i class="fa fa-credit-card"></i> Ödeme Yapıldı
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
             </div>
         </div>
     </div>

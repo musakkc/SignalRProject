@@ -1,7 +1,4 @@
-﻿using SignalR.EntityLayer.DAL.Entities;
-using SignalR.EntityLayer.Entities;
-
-namespace SignalRApi.Models
+﻿namespace SignalRApi.Models
 {
     public class ResultBasketListWithProduct
     {

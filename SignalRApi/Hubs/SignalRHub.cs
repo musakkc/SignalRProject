@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using SignalR.BusinessLayer.Abstract;
-using SignalR.DataAccessLayer.Concrete;
 
 namespace SignalRApi.Hubs
 {

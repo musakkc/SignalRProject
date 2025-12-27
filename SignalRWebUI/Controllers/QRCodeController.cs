@@ -47,15 +47,14 @@ namespace SignalRWebUI.Controllers
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                QRCodeGenerator createQRCode = new QRCodeGenerator();
-                QRCodeGenerator.QRCode squareCode = createQRCode.CreateQrCode(menuUrl, QRCodeGenerator.ECCLevel.Q);
-                using (Bitmap image = squareCode.GetGraphic(10))
-                {
-                    image.Save(memoryStream, ImageFormat.Png);
-                    ViewBag.QrCodeImage = "data:image/png;base64," + Convert.ToBase64String(memoryStream.ToArray());
-                    ViewBag.SelectedTableId = menuTableId;
-                    ViewBag.GeneratedUrl = menuUrl;
-                }
+                QRCodeGenerator createQRCode = new QRCodeGenerator(); 
+                QRCodeData qrCodeData = createQRCode.CreateQrCode(menuUrl, QRCodeGenerator.ECCLevel.Q);
+                PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+                byte[] qrCodeImage = qrCode.GetGraphic(10);
+                
+                ViewBag.QrCodeImage = "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
+                ViewBag.SelectedTableId = menuTableId;
+                ViewBag.GeneratedUrl = menuUrl;
             }
             return View();
         }

@@ -51,6 +51,7 @@
 									<th scope="col">Durum</th>
 									<th scope="col">Onayla</th>
 									<th scope="col">Teslim Et</th>
+									<th scope="col">İptal Et</th>
 									<th scope="col">Detaylar</th>
 								</tr>
 							</thead>
@@ -92,6 +93,16 @@
 											@if (item.Status == "Onaylandı")
 											{
 												<a href="/Orders/DeliverOrder/@item.OrderID" class="btn btn-outline-info">Teslim Et</a>
+											}
+											else
+											{
+												<span class="text-muted">-</span>
+											}
+										</td>
+										<td>
+											@if (item.Status == "Beklemede")
+											{
+												<a href="/Orders/DeleteOrder/@item.OrderID" class="btn btn-outline-danger" onclick="return confirm('Bu siparişi iptal etmek istediğinizden emin misiniz?')">İptal Et</a>
 											}
 											else
 											{
@@ -160,6 +171,7 @@
 													@if (item.Status == "Beklemede")
 													{
 														<a href="/Orders/ApproveOrder/@item.OrderID" class="btn btn-success">Onayla</a>
+														<a href="/Orders/DeleteOrder/@item.OrderID" class="btn btn-danger" onclick="return confirm('Bu siparişi iptal etmek istediğinizden emin misiniz?')">İptal Et</a>
 													}
 													@if (item.Status == "Onaylandı")
 													{

@@ -22,7 +22,11 @@ namespace SignalRWebUI.Controllers
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<List<ResultOrderDto>>(jsonData);
-                return View(values);
+                
+                // Yeni den eskiye sırala
+                var sortedValues = values.OrderByDescending(x => x.OrderDate).ToList();
+                
+                return View(sortedValues);
             }
             return View();
         }
@@ -61,6 +65,24 @@ namespace SignalRWebUI.Controllers
             }
             
             return RedirectToAction("Index");
+        }
+
+        // Siparişi iptal et (sil)
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.DeleteAsync($"https://localhost:7017/api/Order/{id}");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Sipariş iptal edildi!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Sipariş iptal edilirken bir hata oluştu.";
+            }
+            
+            return Redirect(Request.Headers["Referer"].ToString());
         }
     }
 }

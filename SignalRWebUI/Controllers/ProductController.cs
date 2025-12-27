@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.CategoryDtos;
 using SignalRWebUI.Dtos.ProductDtos;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SignalRWebUI.Controllers
 {

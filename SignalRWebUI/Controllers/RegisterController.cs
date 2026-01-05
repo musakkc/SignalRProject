@@ -34,6 +34,15 @@ namespace SignalRWebUI.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+            
+            // Hata mesajlarını TempData'ya ekle
+            var errorMessages = new List<string>();
+            foreach (var error in result.Errors)
+            {
+                errorMessages.Add(error.Description);
+            }
+            TempData["Errors"] = string.Join("|", errorMessages);
+            
             return View();
         }
     }
